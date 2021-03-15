@@ -16,14 +16,14 @@ contract PaymentSplitter {
   event PaymentReleased(address to, uint256 amount);
   event PaymentReceived(address from, uint256 amount);
 
-  uint256 private _totalShares;
-  uint256 private _totalReleased;
+  uint256 _totalShares;
+  uint256 _totalReleased;
 
-  mapping(address => uint256) private _shares;
-  mapping(address => uint256) private _released;
-  address[] private _payees;
+  mapping(address => uint256) _shares;
+  mapping(address => uint256) _released;
+  address[] _payees;
 
-  IERC20 private _token;
+  IERC20 _token;
 
   /**
    * @dev Constructor
@@ -40,44 +40,37 @@ contract PaymentSplitter {
   }
 
   /**
-   * @dev payable fallback
-   */
-  function () external payable {
-    revert();
-  }
-
-  /**
    * @return the total shares of the contract.
    */
-  function totalShares() public view returns(uint256) {
+  function totalShares() external view returns(uint256) {
     return _totalShares;
   }
 
   /**
    * @return the total amount already released.
    */
-  function totalReleased() public view returns(uint256) {
+  function totalReleased() external view returns(uint256) {
     return _totalReleased;
   }
 
   /**
    * @return the shares of an account.
    */
-  function shares(address account) public view returns(uint256) {
+  function shares(address account) external view returns(uint256) {
     return _shares[account];
   }
 
   /**
    * @return the amount already released to an account.
    */
-  function released(address account) public view returns(uint256) {
+  function released(address account) external view returns(uint256) {
     return _released[account];
   }
 
   /**
    * @return the address of a payee.
    */
-  function payee(uint256 index) public view returns(address) {
+  function payee(uint256 index) external view returns(address) {
     return _payees[index];
   }
 
@@ -85,7 +78,7 @@ contract PaymentSplitter {
    * @dev Release one of the payee's proportional payment.
    * @param account Whose payments will be released.
    */
-  function release(address account) public {
+  function release(address account) external {
     require(_shares[account] > 0);
 
     uint256 totalReceived = _token.balanceOf(address(this)).add(_totalReleased);
